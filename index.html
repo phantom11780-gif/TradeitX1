@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA GAMING | فروشگاه گیمینگ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a class="logo" href="#">NOVA<span>GAMING</span></a>
+    <nav>
+      <a href="#home">خانه</a>
+      <a href="#products">محصولات</a>
+      <a href="#about">درباره ما</a>
+    </nav>
+    <button class="cart" onclick="showCart()">
+      🛒 سبد خرید <span id="cart-count">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        <p class="tag">دنیای حرفه‌ای گیمینگ</p>
+        <h1>بازی را<br><span>متفاوت تجربه کن!</span></h1>
+        <p>بهترین تجهیزات گیمینگ را با خیال راحت انتخاب کن.</p>
+        <a class="main-btn" href="#products">مشاهده محصولات</a>
+      </div>
+      <div class="hero-icon">🎮</div>
+    </section>
+
+    <section class="products" id="products">
+      <h2>محصولات ویژه</h2>
+      <p>تجهیزات مورد نیاز برای یک گیمر حرفه‌ای</p>
+      <div class="product-grid" id="product-list"></div>
+    </section>
+
+    <section class="about" id="about">
+      <h2>چرا NOVA GAMING؟</h2>
+      <p>تجربه خرید آسان تجهیزات گیمینگ با پشتیبانی و خدمات مناسب.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 NOVA GAMING - تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
