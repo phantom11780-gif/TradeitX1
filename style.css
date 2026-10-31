@@ -1,0 +1,241 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Vazirmatn', sans-serif;
+  background: #09090f;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.header {
+  min-height: 75px;
+  padding: 15px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: #11111b;
+  border-bottom: 1px solid #25253a;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.logo span {
+  color: #a855f7;
+  margin-right: 5px;
+}
+
+nav {
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  color: #ccc;
+  font-size: 14px;
+  transition: .3s;
+}
+
+nav a:hover {
+  color: #c084fc;
+}
+
+.cart {
+  background: #a855f7;
+  color: white;
+  border: none;
+  padding: 11px 17px;
+  border-radius: 9px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.hero {
+  min-height: 440px;
+  padding: 65px 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  background:
+    radial-gradient(circle at 80% 50%, #581c8738, transparent 35%),
+    linear-gradient(120deg, #11111b, #171025);
+}
+
+.tag {
+  color: #c084fc;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: clamp(35px, 6vw, 65px);
+  line-height: 1.5;
+  font-weight: 900;
+}
+
+.hero h1 span {
+  color: #c084fc;
+}
+
+.hero p:not(.tag) {
+  color: #aaa;
+  margin: 15px 0 28px;
+}
+
+.main-btn {
+  display: inline-block;
+  background: #a855f7;
+  padding: 13px 27px;
+  border-radius: 9px;
+  font-weight: 700;
+  transition: .3s;
+}
+
+.main-btn:hover {
+  background: #9333ea;
+  transform: translateY(-3px);
+}
+
+.hero-icon {
+  font-size: clamp(100px, 18vw, 190px);
+  filter: drop-shadow(0 0 30px #a855f788);
+}
+
+.products {
+  padding: 65px 8%;
+  text-align: center;
+}
+
+.products h2,
+.about h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.products > p,
+.about p {
+  color: #999;
+  margin-bottom: 35px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 22px;
+  margin-top: 35px;
+  text-align: right;
+}
+
+.product-card {
+  background: #151521;
+  border: 1px solid #29293d;
+  border-radius: 15px;
+  padding: 22px;
+  transition: .3s;
+}
+
+.product-card:hover {
+  transform: translateY(-7px);
+  border-color: #a855f7;
+  box-shadow: 0 10px 30px #a855f722;
+}
+
+.product-image {
+  height: 135px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 75px;
+  background: #21152f;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.product-card h3 {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.price {
+  color: #c084fc;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.add-btn {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 11px;
+  background: #a855f7;
+  color: white;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #9333ea;
+}
+
+.about {
+  text-align: center;
+  padding: 55px 10%;
+  background: #11111b;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #888;
+  font-size: 13px;
+  border-top: 1px solid #25253a;
+}
+
+@media (max-width: 650px) {
+  .header {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero {
+    text-align: center;
+    flex-direction: column;
+    padding: 55px 7%;
+  }
+
+  .hero-icon {
+    font-size: 110px;
+  }
+
+  .products {
+    padding: 45px 6%;
+  }
+}
