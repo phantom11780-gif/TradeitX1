@@ -3,10 +3,9 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
-
-<title>TradeitX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>TradeitX | تحلیل هوشمند طلا</title>
 
 <style>
 * {
@@ -15,15 +14,17 @@ content="width=device-width, initial-scale=1">
 
 body {
   margin: 0;
-  background: #090909;
+  background: radial-gradient(ellipse at top, #292215, #090909 65%);
   color: #fff;
-  font-family: Tahoma, Arial;
+  font-family: Tahoma, Arial, sans-serif;
+  min-height: 100vh;
 }
 
 main {
   width: 92%;
-  max-width: 700px;
+  max-width: 760px;
   margin: 35px auto;
+  padding-bottom: 40px;
 }
 
 header {
@@ -31,9 +32,10 @@ header {
   margin-bottom: 30px;
 }
 
-h1 {
+header h1 {
+  font-size: 46px;
   color: #d8ad52;
-  font-size: 42px;
+  margin-bottom: 8px;
 }
 
 header p {
@@ -45,55 +47,64 @@ header p {
   border: 1px solid #80612b;
   border-radius: 18px;
   padding: 22px;
+  box-shadow: 0 15px 45px #0008;
 }
 
 label {
   display: block;
-  color: #e6c779;
   margin: 18px 0 9px;
+  color: #e7c879;
 }
 
 select,
 input,
 textarea {
   width: 100%;
-  padding: 13px;
   background: #090909;
-  color: white;
   border: 1px solid #68502b;
   border-radius: 10px;
+  color: white;
+  padding: 13px;
   font: inherit;
 }
 
 textarea {
   min-height: 90px;
+  resize: vertical;
 }
 
 button {
   width: 100%;
   margin-top: 20px;
   padding: 15px;
-  border: 0;
-  border-radius: 10px;
-  background: linear-gradient(
-    120deg,
-    #b88a31,
-    #f0d58a
-  );
+  border: none;
+  border-radius: 11px;
+  background: linear-gradient(120deg, #b88a31, #f0d58a);
   color: #17120a;
   font-size: 17px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 button:disabled {
   opacity: .5;
+  cursor: wait;
 }
 
 #preview {
   display: none;
   max-width: 100%;
   max-height: 350px;
+  object-fit: contain;
   margin: 15px auto;
+  border-radius: 10px;
+}
+
+#status {
+  text-align: center;
+  color: #e7c879;
+  margin-top: 15px;
+  line-height: 1.8;
 }
 
 #result {
@@ -102,15 +113,9 @@ button:disabled {
   line-height: 2;
   background: #090909;
   border: 1px solid #66502b;
-  padding: 15px;
   border-radius: 12px;
+  padding: 16px;
   margin-top: 20px;
-}
-
-#status {
-  text-align: center;
-  color: #e6c779;
-  margin-top: 15px;
 }
 
 small {
@@ -133,7 +138,7 @@ small {
 
 <section class="panel">
 
-<label>تایم‌فریم نمودار</label>
+<label for="timeframe">تایم‌فریم نمودار</label>
 
 <select id="timeframe">
 <option>M1</option>
@@ -145,23 +150,23 @@ small {
 <option>D1</option>
 </select>
 
-<label>تصویر نمودار MT5</label>
+<label for="chart">تصویر نمودار MT5</label>
 
 <input
 id="chart"
 type="file"
 accept="image/png,image/jpeg,image/webp">
 
-<img id="preview">
+<img id="preview" alt="پیش‌نمایش نمودار">
 
-<label>توضیحات اختیاری</label>
+<label for="notes">توضیحات اختیاری</label>
 
 <textarea
 id="notes"
-placeholder="توضیحات نمودار...">
+placeholder="توضیحات مربوط به نمودار را بنویس...">
 </textarea>
 
-<button id="analyze">
+<button id="analyze" type="button">
 تحلیل نمودار
 </button>
 
@@ -170,77 +175,113 @@ placeholder="توضیحات نمودار...">
 <div id="result"></div>
 
 <small>
-این ابزار فقط تحلیل آموزشی ارائه می‌کند.
-هیچ معامله‌ای به‌صورت خودکار اجرا نمی‌شود.
+این ابزار تحلیل آموزشی ارائه می‌کند.
+قیمت زنده دریافت نمی‌کند و هیچ معامله‌ای اجرا نمی‌کند.
 </small>
 
 </section>
 </main>
 
 <script>
-const chart = document.getElementById("chart");
-const preview = document.getElementById("preview");
-const button = document.getElementById("analyze");
-const status = document.getElementById("status");
-const result = document.getElementById("result");
+const chartInput = document.getElementById("chart");
+const previewImage = document.getElementById("preview");
+const analyzeButton = document.getElementById("analyze");
+const statusBox = document.getElementById("status");
+const resultBox = document.getElementById("result");
 
-chart.addEventListener("change", () => {
-  const file = chart.files[0];
+chartInput.addEventListener("change", function () {
 
-  if (!file) return;
+  const selectedFile = chartInput.files[0];
 
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = "block";
-});
-
-button.addEventListener("click", async () => {
-
-  const file = chart.files[0];
-
-  if (!file) {
-    status.textContent = "ابتدا تصویر نمودار را انتخاب کنید.";
+  if (!selectedFile) {
+    previewImage.style.display = "none";
     return;
   }
 
-  const data = new FormData();
+  const allowedTypes = [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ];
 
-  data.append("chart", file);
-  data.append(
+  if (!allowedTypes.includes(selectedFile.type)) {
+    statusBox.textContent = "فرمت تصویر معتبر نیست.";
+    chartInput.value = "";
+    previewImage.style.display = "none";
+    return;
+  }
+
+  if (selectedFile.size > 10 * 1024 * 1024) {
+    statusBox.textContent = "حجم تصویر نباید بیشتر از ۱۰ مگابایت باشد.";
+    chartInput.value = "";
+    previewImage.style.display = "none";
+    return;
+  }
+
+  previewImage.src = URL.createObjectURL(selectedFile);
+  previewImage.style.display = "block";
+
+  statusBox.textContent = "";
+  resultBox.style.display = "none";
+
+});
+
+analyzeButton.addEventListener("click", async function () {
+
+  const selectedFile = chartInput.files[0];
+
+  if (!selectedFile) {
+    statusBox.textContent = "ابتدا تصویر نمودار را انتخاب کن.";
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append("chart", selectedFile);
+
+  formData.append(
     "timeframe",
     document.getElementById("timeframe").value
   );
-  data.append(
+
+  formData.append(
     "notes",
     document.getElementById("notes").value
   );
 
-  button.disabled = true;
-  status.textContent = "در حال تحلیل نمودار...";
+  analyzeButton.disabled = true;
+  resultBox.style.display = "none";
+
+  statusBox.textContent = "در حال تحلیل نمودار توسط هوش مصنوعی...";
 
   try {
 
     const response = await fetch("/api/analyze", {
       method: "POST",
-      body: data
+      body: formData
     });
 
-    const data = await response.json();
+    const resultData = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "خطا در تحلیل");
+      throw new Error(
+        resultData.error || "خطا در تحلیل تصویر"
+      );
     }
 
-    result.textContent = data.analysis;
-    result.style.display = "block";
-    status.textContent = "تحلیل آماده شد.";
+    resultBox.textContent = resultData.analysis;
+    resultBox.style.display = "block";
+
+    statusBox.textContent = "تحلیل با موفقیت دریافت شد.";
 
   } catch (error) {
 
-    status.textContent = error.message;
+    statusBox.textContent =
+      "خطا: " + error.message;
 
   } finally {
 
-    button.disabled = false;
+    analyzeButton.disabled = false;
 
   }
 
