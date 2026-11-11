@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>TradeitX</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #090909;
+  color: #fff;
+  font-family: Tahoma, Arial;
+}
+
+main {
+  width: 92%;
+  max-width: 700px;
+  margin: 35px auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  color: #d8ad52;
+  font-size: 42px;
+}
+
+header p {
+  color: #aaa;
+}
+
+.panel {
+  background: #171717;
+  border: 1px solid #80612b;
+  border-radius: 18px;
+  padding: 22px;
+}
+
+label {
+  display: block;
+  color: #e6c779;
+  margin: 18px 0 9px;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  padding: 13px;
+  background: #090909;
+  color: white;
+  border: 1px solid #68502b;
+  border-radius: 10px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 90px;
+}
+
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    120deg,
+    #b88a31,
+    #f0d58a
+  );
+  color: #17120a;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+#preview {
+  display: none;
+  max-width: 100%;
+  max-height: 350px;
+  margin: 15px auto;
+}
+
+#result {
+  display: none;
+  white-space: pre-wrap;
+  line-height: 2;
+  background: #090909;
+  border: 1px solid #66502b;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+#status {
+  text-align: center;
+  color: #e6c779;
+  margin-top: 15px;
+}
+
+small {
+  display: block;
+  color: #aaa;
+  line-height: 2;
+  margin-top: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<header>
+<h1>TradeitX</h1>
+<p>تحلیل هوشمند بازار طلا | XAUUSD</p>
+</header>
+
+<section class="panel">
+
+<label>تایم‌فریم نمودار</label>
+
+<select id="timeframe">
+<option>M1</option>
+<option>M5</option>
+<option selected>M15</option>
+<option>M30</option>
+<option>H1</option>
+<option>H4</option>
+<option>D1</option>
+</select>
+
+<label>تصویر نمودار MT5</label>
+
+<input
+id="chart"
+type="file"
+accept="image/png,image/jpeg,image/webp">
+
+<img id="preview">
+
+<label>توضیحات اختیاری</label>
+
+<textarea
+id="notes"
+placeholder="توضیحات نمودار...">
+</textarea>
+
+<button id="analyze">
+تحلیل نمودار
+</button>
+
+<div id="status"></div>
+
+<div id="result"></div>
+
+<small>
+این ابزار فقط تحلیل آموزشی ارائه می‌کند.
+هیچ معامله‌ای به‌صورت خودکار اجرا نمی‌شود.
+</small>
+
+</section>
+</main>
+
+<script>
+const chart = document.getElementById("chart");
+const preview = document.getElementById("preview");
+const button = document.getElementById("analyze");
+const status = document.getElementById("status");
+const result = document.getElementById("result");
+
+chart.addEventListener("change", () => {
+  const file = chart.files[0];
+
+  if (!file) return;
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+});
+
+button.addEventListener("click", async () => {
+
+  const file = chart.files[0];
+
+  if (!file) {
+    status.textContent = "ابتدا تصویر نمودار را انتخاب کنید.";
+    return;
+  }
+
+  const data = new FormData();
+
+  data.append("chart", file);
+  data.append(
+    "timeframe",
+    document.getElementById("timeframe").value
+  );
+  data.append(
+    "notes",
+    document.getElementById("notes").value
+  );
+
+  button.disabled = true;
+  status.textContent = "در حال تحلیل نمودار...";
+
+  try {
+
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      body: data
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "خطا در تحلیل");
+    }
+
+    result.textContent = data.analysis;
+    result.style.display = "block";
+    status.textContent = "تحلیل آماده شد.";
+
+  } catch (error) {
+
+    status.textContent = error.message;
+
+  } finally {
+
+    button.disabled = false;
+
+  }
+
+});
+</script>
+
+</body>
+</html>
